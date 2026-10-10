@@ -22,7 +22,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.replace('/');
         return;
     }
+    const playButtons = document.querySelectorAll('.play-button');
 
+    playButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Redireciona automaticamente usando o valor do data-game
+            window.location.href = `/${btn.dataset.game}`;
+        });
+    });
     // --- Logout ---
     async function logout() {
         try {
@@ -48,3 +55,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         menuToggle.setAttribute('aria-expanded', String(open));
     });
 });
+
