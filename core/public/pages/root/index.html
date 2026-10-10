@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>GamesUFG</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/styles/root.css">
+    <script src="/scripts/root.js" defer></script>
+</head>
+
+<body>
+    <main class="auth-container">
+        <section class="auth-card" aria-labelledby="auth-title">
+
+            <a class="brand" href="#" aria-label="GamesUFG">
+                <img src="images/logo.png" alt="Logo GamesUFG">
+            </a>
+
+            <header class="auth-header">
+                <h1 id="auth-title">Fazer login</h1>
+                <p>Entre na sua conta GamesUFG</p>
+            </header>
+            <div id="g_id_onload" data-client_id="972243789609-7pcmbn13o1foaouagouhdja5v2k61us0.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse" style="align-self: center;" data-auto_select="false" data-use_fedcm_for_prompt="true">
+            </div>
+
+            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                data-text="sign_in_with"  style="align-self: center;" data-size="large" data-logo_alignment="center">
+            </div>
+
+            <div id="result" style="margin-top: 20px;"></div>
+            <footer class="footer">
+                <span>GamesUFG</span>
+                <span>•</span>
+                <a href="#" id="privacy-link">Privacidade</a>
+                <span>•</span>
+                <a href="#" id="help-link">Ajuda</a>
+            </footer>
+    </main>
+</body>
+
+</html>

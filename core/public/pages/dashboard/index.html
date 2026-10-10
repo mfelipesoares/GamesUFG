@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080f1c">
+    <title>GamesUFG</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <script src="/scripts/dashboard.js" defer></script>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar" id="sidebar">
+            <a href="#" class="brand" aria-label="GamesUFG - Início">
+                <img src="/images/logo.png" alt="GamesUFG">
+            </a>
+
+            <nav class="navigation" aria-label="Navegação principal">
+                <a href="#inicio" class="nav-item active" data-nav="inicio">
+                    <span class="nav-icon">⌂</span>
+                    <span>Início</span>
+                </a>
+
+           </nav>
+
+            <div class="sidebar-bottom">
+                <button class="nav-item logout-button" id="logout-button">
+                    <span class="nav-icon">↪</span>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content" id="inicio">
+            <header class="topbar">
+                <button
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-label="Abrir menu"
+                    aria-expanded="false"
+                >☰</button>
+
+                <div class="topbar-right">
+                    <img class="player-avatar hidden" id="player-avatar" alt="" width="36" height="36"
+     referrerpolicy="no-referrer">
+                    <span class="player-name">Jogador</span>
+                    <button class="profile-button" id="profile-button"
+                            aria-label="Abrir perfil">⌄</button>
+
+                    <div class="profile-menu hidden" id="profile-menu">
+                        <span class="profile-menu-name">Jogador</span>
+                        <button id="profile-logout">Sair da conta</button>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content">
+                <div class="welcome">
+                    <p class="eyebrow">PORTAL DE JOGOS</p>
+                    <h1>Olá, <span>Jogador!</span></h1>
+                    <p>Escolha um jogo e comece a se divertir!</p>
+                </div>
+
+                <div class="section-heading" id="jogos">
+                    <div>
+                        <h2>Seus jogos</h2>
+                        <p>Desafie sua mente e descubra novas palavras.</p>
+                    </div>
+                    <span class="game-count">02 JOGOS</span>
+                </div>
+
+                <section class="games-grid" aria-label="Lista de jogos">
+
+                    <!-- Jogo da Forca -->
+                    <article class="game-card">
+                        <div class="game-card-top">
+                            <div class="game-icon hangman-icon" aria-hidden="true">
+                                <svg viewBox="0 0 160 160" fill="none">
+                                    <path d="M28 140H118M43 140V17H133M43 42L68 17"
+                                          stroke="currentColor" stroke-width="6"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                    <circle cx="113" cy="65" r="16"
+                                            stroke="currentColor" stroke-width="6"/>
+                                    <path d="M113 81V119M113 91L92 107M113 91L132 105M113 119L96 143M113 119L130 143"
+                                          stroke="currentColor" stroke-width="6"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+
+                            <div class="game-info">
+                                <div class="game-meta">
+                                    <span class="game-category">VOCABULÁRIO</span>
+                                    <span class="difficulty">Clássico</span>
+                                </div>
+
+                                <h3>Jogo da Forca</h3>
+                                <p>
+                                    Descubra a palavra secreta antes que
+                                    o boneco seja completado!
+                                </p>
+
+                                <div class="game-stats">
+                                    <span>◷ Partidas rápidas</span>
+                                    <span>·</span>
+                                    <span>🔤 Palavras</span>
+                                </div>
+
+                                <button class="play-button"
+                                        data-game="forca">
+                                    <span class="play-icon">▶</span>
+                                    Jogar
+                                    <span class="button-arrow">↗</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="preview hangman-preview">
+                            <div class="preview-header">
+                                <span>PRÉVIA DO JOGO</span>
+                                <span class="preview-dot"></span>
+                            </div>
+
+                            <div class="word-preview" aria-label="Palavra oculta">
+                                <span>_</span>
+                                <span>A</span>
+                                <span>_</span>
+                                <span>A</span>
+                                <span>_</span>
+                                <span>A</span>
+                            </div>
+
+                            <div class="keyboard" aria-hidden="true">
+                                <span class="key guessed">A</span>
+                                <span class="key">B</span>
+                                <span class="key">C</span>
+                                <span class="key">D</span>
+                                <span class="key">E</span>
+                                <span class="key">F</span>
+                                <span class="key">G</span>
+                                <span class="key">H</span>
+                                <span class="key">I</span>
+                                <span class="key">J</span>
+                                <span class="key">K</span>
+                                <span class="key">L</span>
+                                <span class="key">M</span>
+                                <span class="key">N</span>
+                                <span class="key">O</span>
+                                <span class="key guessed">P</span>
+                                <span class="key">Q</span>
+                                <span class="key">R</span>
+                                <span class="key">S</span>
+                                <span class="key">T</span>
+                                <span class="key">U</span>
+                                <span class="key">V</span>
+                                <span class="key">W</span>
+                                <span class="key">X</span>
+                                <span class="key">Y</span>
+                                <span class="key">Z</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Wordle -->
+                    <article class="game-card">
+                        <div class="game-card-top">
+                            <div class="game-icon wordle-icon" aria-hidden="true">
+                                <div class="mini-grid">
+                                    <span class="yellow"></span>
+                                    <span class="gray"></span>
+                                    <span class="gray"></span>
+                                    <span class="gray"></span>
+
+                                    <span class="green"></span>
+                                    <span class="yellow"></span>
+                                    <span class="gray"></span>
+                                    <span class="gray"></span>
+
+                                    <span class="green"></span>
+                                    <span class="green"></span>
+                                    <span class="green"></span>
+                                    <span class="gray"></span>
+
+                                    <span class="green"></span>
+                                    <span class="green"></span>
+                                    <span class="green"></span>
+                                    <span class="green"></span>
+                                </div>
+                            </div>
+
+                            <div class="game-info">
+                                <div class="game-meta">
+                                    <span class="game-category">RACIOCÍNIO</span>
+                                    <span class="difficulty">Desafio diário</span>
+                                </div>
+
+                                <h3>Wordle</h3>
+                                <p>
+                                    Acerte a palavra de cinco letras
+                                    em até seis tentativas.
+                                </p>
+
+                                <div class="game-stats">
+                                    <span>◷ 5 letras</span>
+                                    <span>·</span>
+                                    <span>🎯 6 tentativas</span>
+                                </div>
+
+                                <button class="play-button"
+                                        data-game="wordle">
+                                    <span class="play-icon">▶</span>
+                                    Jogar
+                                    <span class="button-arrow">↗</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="preview wordle-preview">
+                            <div class="preview-header">
+                                <span>PRÉVIA DO JOGO</span>
+                                <span class="preview-dot"></span>
+                            </div>
+
+                            <div class="wordle-board" aria-label="Exemplo de tentativas">
+                                <div class="wordle-row">
+                                    <span class="tile absent">T</span>
+                                    <span class="tile absent">R</span>
+                                    <span class="tile absent">A</span>
+                                    <span class="tile present">V</span>
+                                    <span class="tile absent">A</span>
+                                </div>
+
+                                <div class="wordle-row">
+                                    <span class="tile correct">C</span>
+                                    <span class="tile correct">A</span>
+                                    <span class="tile correct">V</span>
+                                    <span class="tile absent">A</span>
+                                    <span class="tile absent">L</span>
+                                </div>
+
+                                <div class="wordle-row">
+                                    <span class="tile correct">C</span>
+                                    <span class="tile correct">A</span>
+                                    <span class="tile correct">V</span>
+                                    <span class="tile correct">A</span>
+                                    <span class="tile absent">S</span>
+                                </div>
+
+                                <div class="wordle-row">
+                                    <span class="tile empty"></span>
+                                    <span class="tile empty"></span>
+                                    <span class="tile empty"></span>
+                                    <span class="tile empty"></span>
+                                    <span class="tile empty"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <div class="notice hidden" id="notice" role="status"
+                     aria-live="polite"></div>
+
+                <footer class="footer">
+                    <span class="footer-brand">Games<span>UFG</span></span>
+                    <span class="footer-separator">•</span>
+                    <span>Diversão, aprendizado e desafios!</span>
+                </footer>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
+

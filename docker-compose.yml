@@ -1,0 +1,15 @@
+services:
+  gamesufg-core:
+    container_name: gamesufg-core
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    image: gamesufg-core:0.1.0
+    ports:
+      - "8080:8080"
+    networks:
+      - gamesufg-net
+
+networks:
+  gamesufg-net:
+    driver: bridge
