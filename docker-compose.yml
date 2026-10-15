@@ -1,14 +1,210 @@
 services:
+  # ---------- Core: login com Google + gateway (única porta exposta) ----------
   gamesufg-core:
     container_name: gamesufg-core
     build:
       context: ./core
       dockerfile: Dockerfile
     image: gamesufg-core:0.1.0
+    restart: unless-stopped
     ports:
       - "8080:8080"
+    environment:
+      # Endereços internos dos microsserviços (nome do serviço na rede do compose)
+      WORDLE_SERVICE_URL: http://gamesufg-wordle:8081
+      FORCA_SERVICE_URL: http://gamesufg-forca:8082
+      RANKING_SERVICE_URL: http://gamesufg-ranking:8083
+      # Segredo do JWT que o gateway assina e os microsserviços validam (defina no .env da raiz)
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:-dev-only-insecure-jwt-secret}
     networks:
       - gamesufg-net
+
+  # ---------- Wordle ----------
+  gamesufg-wordle:
+    container_name: gamesufg-wordle
+    build:
+      context: ./wordle
+      dockerfile: Dockerfile
+    image: gamesufg-wordle:0.1.0
+    restart: unless-stopped
+    # Sem "ports": só o gateway (core) e os outros serviços da rede enxergam este container.
+    environment:
+      SERVER_PORT: 8081
+      DATABASE_URL: postgres://wordle:${WORDLE_DB_PASSWORD:-wordle}@gamesufg-wordle-db:5432/wordle
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:-dev-only-insecure-jwt-secret}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-dev-only-insecure-internal-secret}
+      DAILY_GAME_LIMIT: ${DAILY_GAME_LIMIT:-5}
+      PALAVRAS_SERVICE_URL: http://gamesufg-palavras:8084
+      RANKING_SERVICE_URL: http://gamesufg-ranking:8083
+    depends_on:
+      gamesufg-wordle-db:
+        condition: service_healthy
+      gamesufg-palavras:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:8081/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamesufg-net
+
+  gamesufg-wordle-db:
+    container_name: gamesufg-wordle-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wordle
+      POSTGRES_PASSWORD: ${WORDLE_DB_PASSWORD:-wordle}
+      POSTGRES_DB: wordle
+    volumes:
+      - wordle-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wordle -d wordle"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gamesufg-net
+
+  # ---------- Forca ----------
+  gamesufg-forca:
+    container_name: gamesufg-forca
+    build:
+      context: ./forca
+      dockerfile: Dockerfile
+    image: gamesufg-forca:0.1.0
+    restart: unless-stopped
+    # Sem "ports": só o gateway (core) e os outros serviços da rede enxergam este container.
+    environment:
+      SERVER_PORT: 8082
+      DATABASE_URL: postgres://forca:${FORCA_DB_PASSWORD:-forca}@gamesufg-forca-db:5432/forca
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:-dev-only-insecure-jwt-secret}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-dev-only-insecure-internal-secret}
+      DAILY_GAME_LIMIT: ${DAILY_GAME_LIMIT:-5}
+      PALAVRAS_SERVICE_URL: http://gamesufg-palavras:8084
+      RANKING_SERVICE_URL: http://gamesufg-ranking:8083
+    depends_on:
+      gamesufg-forca-db:
+        condition: service_healthy
+      gamesufg-palavras:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:8082/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamesufg-net
+
+  gamesufg-forca-db:
+    container_name: gamesufg-forca-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: forca
+      POSTGRES_PASSWORD: ${FORCA_DB_PASSWORD:-forca}
+      POSTGRES_DB: forca
+    volumes:
+      - forca-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forca -d forca"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gamesufg-net
+
+  # ---------- Palavras: sorteia a palavra secreta (só wordle/forca falam com ele) ----------
+  gamesufg-palavras:
+    container_name: gamesufg-palavras
+    build:
+      context: ./palavras
+      dockerfile: Dockerfile
+    image: gamesufg-palavras:0.1.0
+    restart: unless-stopped
+    # Sem "ports": só o gateway (core) e os outros serviços da rede enxergam este container.
+    environment:
+      SERVER_PORT: 8084
+      DATABASE_URL: postgres://palavras:${PALAVRAS_DB_PASSWORD:-palavras}@gamesufg-palavras-db:5432/palavras
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-dev-only-insecure-internal-secret}
+    depends_on:
+      gamesufg-palavras-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:8084/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamesufg-net
+
+  gamesufg-palavras-db:
+    container_name: gamesufg-palavras-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: palavras
+      POSTGRES_PASSWORD: ${PALAVRAS_DB_PASSWORD:-palavras}
+      POSTGRES_DB: palavras
+    volumes:
+      - palavras-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U palavras -d palavras"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gamesufg-net
+
+  # ---------- Ranking: soma os pontos de forca + wordle por conta ----------
+  gamesufg-ranking:
+    container_name: gamesufg-ranking
+    build:
+      context: ./ranking
+      dockerfile: Dockerfile
+    image: gamesufg-ranking:0.1.0
+    restart: unless-stopped
+    # Sem "ports": só o gateway (core) e os outros serviços da rede enxergam este container.
+    environment:
+      SERVER_PORT: 8083
+      DATABASE_URL: postgres://ranking:${RANKING_DB_PASSWORD:-ranking}@gamesufg-ranking-db:5432/ranking
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:-dev-only-insecure-jwt-secret}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-dev-only-insecure-internal-secret}
+    depends_on:
+      gamesufg-ranking-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:8083/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamesufg-net
+
+  gamesufg-ranking-db:
+    container_name: gamesufg-ranking-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ranking
+      POSTGRES_PASSWORD: ${RANKING_DB_PASSWORD:-ranking}
+      POSTGRES_DB: ranking
+    volumes:
+      - ranking-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ranking -d ranking"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gamesufg-net
+
+volumes:
+  wordle-db-data:
+  forca-db-data:
+  palavras-db-data:
+  ranking-db-data:
 
 networks:
   gamesufg-net:

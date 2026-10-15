@@ -3,353 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Forca</title>
-    <style>
-        :root {
-            --bg-color: #0d1117;
-            --panel-bg: #161b22;
-            --text-main: #ffffff;
-            --text-muted: #8b949e;
-            --accent-green: #00ff88;
-            --accent-yellow: #facc15;
-            --accent-gray: #374151;
-            --border-color: #30363d;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-
-        .back-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #a78bfa, #818cf8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1e1b4b;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .user-xp {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* Main Container Layout */
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .title {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
-
-        /* Game Core Grid (Desktop) / Flex (Mobile) */
-        .game-main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .game-main-content {
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                gap: 40px;
-            }
-        }
-
-        /* Hangman Box */
-        .hangman-box {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            width: 220px;
-            height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .hangman-svg {
-            width: 150px;
-            height: 160px;
-        }
-
-        .hangman-part {
-            stroke: var(--text-main);
-            stroke-width: 4;
-            stroke-linecap: round;
-            fill: none;
-            transition: all 0.3s ease;
-        }
-
-        .hidden-part {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .visible-part {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Word Display Box */
-        .word-box {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px 24px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .letter-slot {
-            font-size: 2.2rem;
-            font-weight: 800;
-            width: 42px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 4px solid var(--accent-green);
-            color: var(--text-main);
-            text-transform: uppercase;
-        }
-
-        /* Virtual Keyboard & Legend Panel */
-        .keyboard-panel {
-            background-color: #0b0f15;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            width: 100%;
-            max-width: 700px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
-        .legend-color.correct { background-color: var(--accent-green); box-shadow: 0 0 8px rgba(0,255,136,0.5); }
-        .legend-color.present { background-color: var(--accent-yellow); box-shadow: 0 0 8px rgba(250,204,21,0.5); }
-        .legend-color.absent { background-color: var(--accent-gray); }
-
-        .keyboard-row {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .key {
-            background-color: #1f2937;
-            color: var(--text-main);
-            border: none;
-            border-radius: 6px;
-            height: 48px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            max-width: 44px;
-            transition: all 0.15s ease;
-            user-select: none;
-        }
-
-        .key.wide {
-            max-width: 75px;
-            font-size: 0.75rem;
-        }
-
-        .key:hover {
-            filter: brightness(1.2);
-        }
-
-        .key:active {
-            transform: scale(0.95);
-        }
-
-        /* Key States */
-        .key.correct {
-            background-color: var(--accent-green);
-            color: #052e16;
-            box-shadow: 0 0 12px rgba(0,255,136,0.4);
-        }
-
-        .key.present {
-            background-color: var(--accent-yellow);
-            color: #422006;
-            box-shadow: 0 0 12px rgba(250,204,21,0.4);
-        }
-
-        .key.absent {
-            background-color: var(--accent-gray);
-            color: #9ca3af;
-        }
-
-        /* Modal / Message Overlay */
-        .message-box {
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            min-height: 30px;
-        }
-
-        .restart-btn {
-            background: linear-gradient(135deg, var(--accent-green), #059669);
-            color: #052e16;
-            border: none;
-            padding: 10px 24px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            display: none;
-            margin: 0 auto;
-            box-shadow: 0 0 15px rgba(0,255,136,0.3);
-            transition: transform 0.2s;
-        }
-
-        .restart-btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+    <meta name="theme-color" content="#0d1117">
+    <title>Jogo da Forca - GamesUFG</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/forca/images/favicon.png">
+    <link rel="stylesheet" href="/forca/styles/forca.css">
+    <script src="/forca/scripts/forca.js" defer></script>
 </head>
 <body>
-
     <!-- Top Bar -->
     <div class="top-bar">
-        <button class="back-btn" aria-label="Voltar">
-            &#8592;
-        </button>
+        <button class="back-btn" id="backBtn" aria-label="Voltar ao início">&#8592;</button>
+        <img class="brand-logo" src="/forca/images/logo.png" alt="GamesUFG">
         <div class="user-profile">
             <div class="user-info">
-                <span class="user-name">Nome do usuário</span>
-                <span class="user-xp">8.500 XP</span>
+                <span class="user-name" id="userName">Jogador</span>
+                <span class="user-xp" id="userPoints">0 pontos</span>
             </div>
             <div class="avatar">
-                <span>U</span>
+                <img id="userAvatar" class="avatar-img hidden" alt="" referrerpolicy="no-referrer">
+                <span id="userInitial">J</span>
             </div>
         </div>
     </div>
 
     <!-- Game Container -->
-    <div class="game-container">
+    <main class="game-container">
         <h1 class="title">Jogo da forca</h1>
+        <div class="daily" id="daily" aria-live="polite"></div>
 
         <div class="game-main-content">
             <!-- Hangman Drawing -->
             <div class="hangman-box">
-                <svg class="hangman-svg" viewBox="0 0 150 160">
+                <svg class="hangman-svg" viewBox="0 0 150 160" role="img" aria-label="Boneco da forca">
                     <line x1="20" y1="150" x2="100" y2="150" class="hangman-part" />
                     <line x1="60" y1="10" x2="60" y2="150" class="hangman-part" />
                     <line x1="60" y1="10" x2="120" y2="10" class="hangman-part" />
                     <line x1="120" y1="10" x2="120" y2="40" class="hangman-part" />
 
-                    <!-- Parts -->
+                    <!-- Partes do boneco (uma por erro) -->
                     <circle cx="120" cy="55" r="12" class="hangman-part hidden-part" id="part-1" />
                     <line x1="120" y1="67" x2="120" y2="110" class="hangman-part hidden-part" id="part-2" />
                     <line x1="120" y1="80" x2="100" y2="95" class="hangman-part hidden-part" id="part-3" />
@@ -360,18 +51,17 @@
             </div>
 
             <!-- Word Slots -->
-            <div class="word-box" id="wordDisplay"></div>
+            <div class="word-box" id="wordDisplay" aria-label="Palavra secreta"></div>
         </div>
 
-        <div class="message-box" id="message"></div>
-        <button class="restart-btn" id="restartBtn" onclick="initGame()">Jogar Novamente</button>
+        <div class="message-box" id="message" role="status" aria-live="polite"></div>
+        <button class="restart-btn" id="startBtn" type="button">Começar</button>
 
         <!-- Keyboard Panel -->
         <div class="keyboard-panel">
             <div class="legend">
                 <div class="legend-item"><div class="legend-color correct"></div> Correta</div>
-                <div class="legend-item"><div class="legend-color present"></div> Presente</div>
-                <div class="legend-item"><div class="legend-color absent"></div> Ausente</div>
+                <div class="legend-item"><div class="legend-color absent"></div> Errada</div>
             </div>
 
             <div class="keyboard-row">
@@ -398,7 +88,6 @@
                 <button class="key" data-key="L">L</button>
             </div>
             <div class="keyboard-row">
-                <button class="key wide" data-key="ENTER">ENTER</button>
                 <button class="key" data-key="Z">Z</button>
                 <button class="key" data-key="X">X</button>
                 <button class="key" data-key="C">C</button>
@@ -406,129 +95,8 @@
                 <button class="key" data-key="B">B</button>
                 <button class="key" data-key="N">N</button>
                 <button class="key" data-key="M">M</button>
-                <button class="key wide" data-key="BACK">&#9003;</button>
             </div>
         </div>
-    </div>
-
-    <script>
-        const words = ["PLANO", "LIVRO", "CARRO", "PORTA", "NOITE", "PEDRA", "TERRA", "FESTA"];
-        let selectedWord = "";
-        let guessedLetters = [];
-        let wrongGuesses = 0;
-        const maxWrong = 6;
-        let gameOver = false;
-
-        const wordDisplay = document.getElementById("wordDisplay");
-        const message = document.getElementById("message");
-        const restartBtn = document.getElementById("restartBtn");
-        const keys = document.querySelectorAll(".key");
-
-        function initGame() {
-            selectedWord = words[Math.floor(Math.random() * words.length)];
-            guessedLetters = [];
-            wrongGuesses = 0;
-            gameOver = false;
-            message.textContent = "";
-            restartBtn.style.display = "none";
-
-            // Reset hangman parts
-            for (let i = 1; i <= maxWrong; i++) {
-                const part = document.getElementById(`part-${i}`);
-                part.classList.remove("visible-part");
-                part.classList.add("hidden-part");
-            }
-
-            // Reset keyboard buttons
-            keys.forEach(key => {
-                key.classList.remove("correct", "present", "absent");
-            });
-
-            renderWord();
-        }
-
-        function renderWord() {
-            wordDisplay.innerHTML = "";
-            for (let letter of selectedWord) {
-                const slot = document.createElement("div");
-                slot.classList.add("letter-slot");
-                slot.textContent = guessedLetters.includes(letter) ? letter : "";
-                wordDisplay.appendChild(slot);
-            }
-        }
-
-        function handleGuess(letter) {
-            if (gameOver) return;
-            letter = letter.toUpperCase();
-
-            if (!letter.match(/^[A-Z]$/)) return;
-            if (guessedLetters.includes(letter)) return;
-
-            guessedLetters.push(letter);
-            const keyEl = document.querySelector(`[data-key="${letter}"]`);
-
-            if (selectedWord.includes(letter)) {
-                if (keyEl) keyEl.classList.add("correct");
-                renderWord();
-                checkWin();
-            } else {
-                wrongGuesses++;
-                if (keyEl) keyEl.classList.add("absent");
-                
-                const part = document.getElementById(`part-${wrongGuesses}`);
-                if (part) {
-                    part.classList.remove("hidden-part");
-                    part.classList.add("visible-part");
-                }
-                checkLoss();
-            }
-        }
-
-        function checkWin() {
-            const won = selectedWord.split('').every(letter => guessedLetters.includes(letter));
-            if (won) {
-                message.textContent = "Parabéns, você venceu! 🎉";
-                message.style.color = "var(--accent-green)";
-                endGame();
-            }
-        }
-
-        function checkLoss() {
-            if (wrongGuesses >= maxWrong) {
-                message.textContent = `Fim de jogo! A palavra era: ${selectedWord}`;
-                message.style.color = "#f43f5e";
-                
-                const slots = wordDisplay.children;
-                for (let i = 0; i < selectedWord.length; i++) {
-                    slots[i].textContent = selectedWord[i];
-                }
-                endGame();
-            }
-        }
-
-        function endGame() {
-            gameOver = true;
-            restartBtn.style.display = "block";
-        }
-
-        // Event Listeners for Virtual Keyboard
-        keys.forEach(key => {
-            key.addEventListener("click", () => {
-                const keyValue = key.getAttribute("data-key");
-                if (keyValue !== "ENTER" && keyValue !== "BACK") {
-                    handleGuess(keyValue);
-                }
-            });
-        });
-
-        // Physical Keyboard Support
-        window.addEventListener("keydown", (e) => {
-            if (e.key.length === 1 && e.key.match(/^[a-zA-ZçÇ]$/)) {
-                handleGuess(e.key.toUpperCase());
-            }
-        });
-
-        initGame();
-    </script>
+    </main>
 </body>
 </html>

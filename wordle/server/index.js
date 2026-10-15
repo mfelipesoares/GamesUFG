@@ -1,29 +1,38 @@
 import express from 'express';
-import cors from 'cors';
-import { authRouter, sessionMiddleware, isProd } from './auth/index.js';
-import { mountServices } from './gateway/index.js';
-import publicRoutes from './routes/public.routes.js';
-import dashRoutes from './routes/dashboard.routes.js';
-
-const PORT = process.env.SERVER_PORT || 8080;
+import { config } from './config.js';
+import { requireGatewayAuth } from './auth.js';
+import { initDatabase, pool } from './db.js';
+import { errorHandler } from './errors.js';
+import { startReporter } from './ranking.reporter.js';
+import apiRoutes from './routes/api.routes.js';
+import staticRoutes from './routes/static.routes.js';
 
 const app = express();
+app.disable('x-powered-by');
 
-// Atrás de proxy reverso (HTTPS), necessário para o cookie "secure" funcionar.
-if (isProd) app.set('trust proxy', 1);
+// Healthcheck do Docker. Fica ANTES da autenticação e não é exposto pelo gateway
+// (o gateway só repassa /wordle/*), então só é alcançável dentro da rede do compose.
+app.get('/health', (req, res) => res.json({ status: 'ok', service: config.serviceName }));
 
-app.use(cors());
-app.use(sessionMiddleware);
+// Tudo abaixo exige o JWT assinado pelo gateway.
+app.use(requireGatewayAuth);
+app.use(`${config.basePath}/api`, apiRoutes);
+app.use(staticRoutes);
 
-// Gateway: /wordle (e demais serviços) -> exige login e repassa o token.
-// Fica ANTES do express.json() para o corpo da requisição chegar intacto ao microsserviço.
-mountServices(app);
+app.use((req, res) => res.status(404).json({ error: 'Rota não encontrada.' }));
+app.use(errorHandler);
 
-app.use(express.json());
-app.use(authRouter);
-app.use(publicRoutes);
-app.use(dashRoutes);
+await initDatabase();
+startReporter();
 
-app.listen(PORT, () => {
-    console.log("Servidor iniciado em: http://localhost:" + PORT);
+const server = app.listen(config.port, () => {
+    console.log(`Wordle iniciado em: http://localhost:${config.port}${config.basePath}`);
 });
+
+async function shutdown() {
+    server.close();
+    await pool.end().catch(() => {});
+    process.exit(0);
+}
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);

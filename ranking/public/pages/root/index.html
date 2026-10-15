@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d1117">
+    <title>Ranking - GamesUFG</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/ranking/images/favicon.png">
+    <link rel="stylesheet" href="/ranking/styles/ranking.css">
+    <script src="/ranking/scripts/ranking.js" defer></script>
+</head>
+<body>
+    <div class="top-bar">
+        <button class="back-btn" id="backBtn" aria-label="Voltar ao início">&#8592;</button>
+        <img class="brand-logo" src="/ranking/images/logo.png" alt="GamesUFG">
+        <div class="user-profile">
+            <div class="user-info">
+                <span class="user-name" id="userName">Jogador</span>
+                <span class="user-xp" id="userPoints">0 pontos</span>
+            </div>
+            <div class="avatar">
+                <img id="userAvatar" class="avatar-img hidden" alt="" referrerpolicy="no-referrer">
+                <span id="userInitial">J</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <h1 class="title">Ranking</h1>
+
+        <div class="tabs" role="tablist" aria-label="Jogo">
+            <button class="tab active" role="tab" data-game="all" aria-selected="true">Geral</button>
+            <button class="tab" role="tab" data-game="forca" aria-selected="false">Forca</button>
+            <button class="tab" role="tab" data-game="wordle" aria-selected="false">Wordle</button>
+        </div>
+
+        <section class="me-card hidden" id="meCard" aria-live="polite">
+            <div class="me-position" id="mePosition">-</div>
+            <div class="me-text">
+                <strong>Sua posição</strong>
+                <span id="meDetail"></span>
+            </div>
+        </section>
+
+        <div class="message" id="message" role="status" aria-live="polite"></div>
+        <ol class="board" id="board"></ol>
+
+        <details class="rules">
+            <summary>Como funciona a pontuação</summary>
+            <ul>
+                <li><strong>Forca:</strong> vitória vale 100 pontos menos 10 por erro (50 a 100). Derrota vale 0.</li>
+                <li><strong>Wordle:</strong> acertar na 1ª tentativa vale 100 pontos, menos 15 por tentativa extra (mínimo 25). Derrota vale 0.</li>
+                <li>O ranking soma os pontos de todas as partidas. Em caso de empate, vence quem tem mais vitórias.</li>
+            </ul>
+        </details>
+    </main>
+</body>
+</html>

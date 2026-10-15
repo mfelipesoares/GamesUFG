@@ -26,11 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     playButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Redireciona automaticamente usando o valor do data-game
             window.location.href = `/${btn.dataset.game}`;
         });
     });
-    // --- Logout ---
     async function logout() {
         try {
             await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });

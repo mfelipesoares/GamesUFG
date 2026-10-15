@@ -1,0 +1,27 @@
+// Palavras de 5 letras, MAIÚSCULAS e sem acento. São gravadas no banco na inicialização
+// (INSERT ... ON CONFLICT DO NOTHING), então é seguro reiniciar e acrescentar palavras aqui.
+export const SEED_WORDS = [
+    "AMIGO", "ANJOS", "ARARA", "AREIA", "ARROZ", "ASSIM", "ATLAS", "BAIXO",
+    "BANCO", "BARCO", "BEIJO", "BICHO", "BISPO", "BOLSA", "BRISA", "BRUXA",
+    "BURRO", "CABRA", "CAIXA", "CALMA", "CAMPO", "CANTO", "CARRO", "CARTA",
+    "CASAL", "CAUSA", "CERCA", "CHAVE", "CHUVA", "CINTO", "CLARO", "COBRA",
+    "COISA", "COMER", "CORPO", "COSTA", "CRIAR", "CULTO", "CURVA", "DEDOS",
+    "DENTE", "DISCO", "DOCES", "DUELO", "ENTRE", "ERROS", "ETAPA", "FALAR",
+    "FARDO", "FAROL", "FESTA", "FILHO", "FIRME", "FLORA", "FOGAO", "FORCA",
+    "FORMA", "FORTE", "FRUTA", "FUNDO", "GALHO", "GANHO", "GENTE", "GLOBO",
+    "GOSTO", "GRAMA", "GRAVE", "GRUPO", "HORAS", "HOTEL", "IDEIA", "IGUAL",
+    "JANTA", "JOGAR", "JOGOS", "JOVEM", "JUNTO", "LAGOA", "LAPIS", "LARGO",
+    "LEITE", "LENTO", "LETRA", "LIVRO", "LOUCO", "LUGAR", "LUTAR", "MACHO",
+    "MAIOR", "MANGA", "MANHA", "MARCA", "MEDIA", "MELAO", "MENOR", "MESES",
+    "METRO", "MILHO", "MORAR", "MORTE", "MOTOR", "MUITO", "MUNDO", "MUSEU",
+    "NADAR", "NAVIO", "NEGRO", "NINHO", "NOITE", "NOSSO", "NOVOS", "NUVEM",
+    "OBRAS", "OLHAR", "ONTEM", "ORDEM", "OSSOS", "OUTRO", "PAPEL", "PARTE",
+    "PASSO", "PEDRA", "PEIXE", "PERTO", "PESAR", "PIANO", "PISTA", "PLANO",
+    "PLUMA", "POETA", "PONTE", "PORTA", "POUCO", "PRAIA", "PRAZO", "PRETO",
+    "PROVA", "PULAR", "QUASE", "QUEDA", "RADIO", "RAIVA", "RAMOS", "REDES",
+    "REINO", "RELVA", "RISCO", "ROUPA", "SABER", "SALAS", "SANTO", "SAUDE",
+    "SERIE", "SINAL", "SOBRE", "SONHO", "SORTE", "SUCOS", "TARDE", "TEMPO",
+    "TENDA", "TERRA", "TIGRE", "TINTA", "TIPOS", "TORRE", "TRAVE", "TREVO",
+    "TROCA", "TURMA", "UNIAO", "URSOS", "VALOR", "VAPOR", "VELHO", "VENTO",
+    "VERDE", "VIDRO", "VIRAR", "VISTA", "VIVER", "VOZES", "ZEBRA", "ZELAR",
+];

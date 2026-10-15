@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/styles/dashboard.css">
     <script src="/scripts/dashboard.js" defer></script>
 </head>
+
 <body>
     <div class="dashboard">
         <aside class="sidebar" id="sidebar">
@@ -22,8 +23,11 @@
                     <span class="nav-icon">⌂</span>
                     <span>Início</span>
                 </a>
-
-           </nav>
+                <a href="/ranking" class="nav-item" data-nav="ranking">
+                    <span class="nav-icon"> <img src="/images/ranking.svg"></span>
+                    <span>Ranking</span>
+                </a>
+            </nav>
 
             <div class="sidebar-bottom">
                 <button class="nav-item logout-button" id="logout-button">
@@ -35,22 +39,17 @@
 
         <main class="main-content" id="inicio">
             <header class="topbar">
-                <button
-                    class="menu-toggle"
-                    id="menu-toggle"
-                    aria-label="Abrir menu"
-                    aria-expanded="false"
-                >☰</button>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
 
                 <div class="topbar-right">
                     <img class="player-avatar hidden" id="player-avatar" alt="" width="36" height="36"
-     referrerpolicy="no-referrer">
+                        referrerpolicy="no-referrer">
                     <span class="player-name">Jogador</span>
-                    <button class="profile-button" id="profile-button"
-                            aria-label="Abrir perfil">⌄</button>
+                    <button class="profile-button" id="profile-button" aria-label="Abrir perfil">⌄</button>
 
                     <div class="profile-menu hidden" id="profile-menu">
                         <span class="profile-menu-name">Jogador</span>
+                        <a href="/ranking"><span>Ranking</span></a>
                         <button id="profile-logout">Sair da conta</button>
                     </div>
                 </div>
@@ -78,16 +77,12 @@
                         <div class="game-card-top">
                             <div class="game-icon hangman-icon" aria-hidden="true">
                                 <svg viewBox="0 0 160 160" fill="none">
-                                    <path d="M28 140H118M43 140V17H133M43 42L68 17"
-                                          stroke="currentColor" stroke-width="6"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"/>
-                                    <circle cx="113" cy="65" r="16"
-                                            stroke="currentColor" stroke-width="6"/>
+                                    <path d="M28 140H118M43 140V17H133M43 42L68 17" stroke="currentColor"
+                                        stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="113" cy="65" r="16" stroke="currentColor" stroke-width="6" />
                                     <path d="M113 81V119M113 91L92 107M113 91L132 105M113 119L96 143M113 119L130 143"
-                                          stroke="currentColor" stroke-width="6"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"/>
+                                        stroke="currentColor" stroke-width="6" stroke-linecap="round"
+                                        stroke-linejoin="round" />
                                 </svg>
                             </div>
 
@@ -109,8 +104,7 @@
                                     <span>🔤 Palavras</span>
                                 </div>
 
-                                <button class="play-button"
-                                        data-game="forca">
+                                <button class="play-button" data-game="forca">
                                     <span class="play-icon">▶</span>
                                     Jogar
                                     <span class="button-arrow">↗</span>
@@ -209,8 +203,7 @@
                                     <span>🎯 6 tentativas</span>
                                 </div>
 
-                                <button class="play-button"
-                                        data-game="wordle">
+                                <button class="play-button" data-game="wordle">
                                     <span class="play-icon">▶</span>
                                     Jogar
                                     <span class="button-arrow">↗</span>
@@ -261,8 +254,7 @@
                     </article>
                 </section>
 
-                <div class="notice hidden" id="notice" role="status"
-                     aria-live="polite"></div>
+                <div class="notice hidden" id="notice" role="status" aria-live="polite"></div>
 
                 <footer class="footer">
                     <span class="footer-brand">Games<span>UFG</span></span>
@@ -273,5 +265,5 @@
         </main>
     </div>
 </body>
-</html>
 
+</html>

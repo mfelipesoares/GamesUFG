@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d1117">
     <title>Wordle - GamesUFG</title>
-    <script src="/scripts/wordle.js"></script>
-    <link rel="stylesheet" href="/styles/wordle.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/wordle/images/favicon.png">
+    <link rel="stylesheet" href="/wordle/styles/wordle.css">
+    <script src="/wordle/scripts/wordle.js" defer></script>
 </head>
 <body>
     <div class="top-bar">
-        <button class="back-btn" aria-label="Voltar">&#8592;</button>
+        <button class="back-btn" id="backBtn" aria-label="Voltar ao início">&#8592;</button>
+        <img class="brand-logo" src="/wordle/images/logo.png" alt="GamesUFG">
         <div class="user-profile">
             <div class="user-info">
-                <span class="user-name">Nome do usuário</span>
-                <span class="user-xp">0 XP</span>
+                <span class="user-name" id="userName">Jogador</span>
+                <span class="user-xp" id="userPoints">0 pontos</span>
             </div>
-            <div class="avatar"><span>U</span></div>
+            <div class="avatar">
+                <img id="userAvatar" class="avatar-img hidden" alt="" referrerpolicy="no-referrer">
+                <span id="userInitial">J</span>
+            </div>
         </div>
     </div>
 
-    <!-- Game Container -->
-    <div class="game-container">
-        <div class="instructions">Tente adivinhar a palavra de 5 letras.</div>
+    <main class="game-container">
+        <h1 class="title">Wordle</h1>
+        <div class="instructions">Tente adivinhar a palavra de 5 letras em até 6 tentativas.</div>
+        <div class="daily" id="daily" aria-live="polite"></div>
 
-        <!-- Board -->
-        <div class="board" id="board"></div>
+        <div class="board" id="board" role="grid" aria-label="Tabuleiro"></div>
 
-        <div class="message" id="message"></div>
-        <button class="restart-btn" id="restartBtn" onclick="initGame()">Jogar Novamente</button>
+        <div class="message" id="message" role="status" aria-live="polite"></div>
+        <button class="restart-btn" id="startBtn" type="button">Novo jogo</button>
 
-        <!-- Keyboard -->
-        <div class="keyboard">
+        <div class="keyboard" id="keyboard">
             <div class="legend">
                 <div class="legend-item"><div class="legend-color correct"></div> Correta</div>
                 <div class="legend-item"><div class="legend-color present"></div> Presente</div>
@@ -69,148 +74,9 @@
                 <button class="key" data-key="B">B</button>
                 <button class="key" data-key="N">N</button>
                 <button class="key" data-key="M">M</button>
-                <button class="key wide" data-key="BACK">&#9003;</button>
+                <button class="key wide" data-key="BACK" aria-label="Apagar">&#9003;</button>
             </div>
         </div>
-    </div>
-
-    <script>
-        const words = ["PLANO", "LIVRO", "CARRO", "PORTA", "NOITE", "PEDRA", "TERRA", "FESTA", "GAMES"];
-        let targetWord = "";
-        let currentRow = 0;
-        let currentTile = 0;
-        let boardState = Array(6).fill("").map(() => Array(5).fill(""));
-        let gameOver = false;
-
-        const boardEl = document.getElementById("board");
-        const messageEl = document.getElementById("message");
-        const restartBtn = document.getElementById("restartBtn");
-        const keys = document.querySelectorAll(".key");
-
-        function initGame() {
-            targetWord = words[Math.floor(Math.random() * words.length)];
-            currentRow = 0;
-            currentTile = 0;
-            boardState = Array(6).fill("").map(() => Array(5).fill(""));
-            gameOver = false;
-            messageEl.textContent = "";
-            restartBtn.style.display = "none";
-
-            keys.forEach(key => key.classList.remove("correct", "present", "absent"));
-            renderBoard();
-        }
-
-        function renderBoard() {
-            boardEl.innerHTML = "";
-            for (let r = 0; r < 6; r++) {
-                const rowEl = document.createElement("div");
-                rowEl.classList.add("board-row");
-                for (let c = 0; c < 5; c++) {
-                    const tileEl = document.createElement("div");
-                    tileEl.classList.add("tile");
-                    const letter = boardState[r][c];
-                    tileEl.textContent = letter;
-
-                    if (r < currentRow) {
-                        const targetLetters = targetWord.split("");
-                        const guessLetter = letter;
-                        if (targetLetters[c] === guessLetter) {
-                            tileEl.classList.add("correct");
-                        } else if (targetLetters.includes(guessLetter)) {
-                            tileEl.classList.add("present");
-                        } else {
-                            tileEl.classList.add("absent");
-                        }
-                    }
-                    rowEl.appendChild(tileEl);
-                }
-                boardEl.appendChild(rowEl);
-            }
-        }
-
-        function handleKeyPress(key) {
-            if (gameOver) return;
-
-            if (key === "ENTER") {
-                if (currentTile < 5) {
-                    messageEl.textContent = "Palavra muito curta!";
-                    return;
-                }
-                checkRow();
-            } else if (key === "BACK") {
-                if (currentTile > 0) {
-                    currentTile--;
-                    boardState[currentRow][currentTile] = "";
-                    renderBoard();
-                }
-            } else {
-                if (currentTile < 5) {
-                    boardState[currentRow][currentTile] = key;
-                    currentTile++;
-                    renderBoard();
-                }
-            }
-        }
-
-        function checkRow() {
-            const guess = boardState[currentRow].join("");
-            
-            // Check letters for keyboard updates
-            const guessLetters = guess.split("");
-            guessLetters.forEach((letter, i) => {
-                const keyEl = document.querySelector(`[data-key="${letter}"]`);
-                if (!keyEl) return;
-
-                if (targetWord[i] === letter) {
-                    keyEl.classList.add("correct");
-                    keyEl.classList.remove("present");
-                } else if (targetWord.includes(letter) && !keyEl.classList.contains("correct")) {
-                    keyEl.classList.add("present");
-                } else if (!targetWord.includes(letter)) {
-                    keyEl.classList.add("absent");
-                }
-            });
-
-            renderBoard();
-
-            if (guess === targetWord) {
-                messageEl.textContent = "Parabéns, você venceu! 🎉";
-                messageEl.style.color = "var(--accent-green)";
-                endGame();
-                return;
-            }
-
-            currentRow++;
-            currentTile = 0;
-
-            if (currentRow === 6) {
-                messageEl.textContent = `Fim de jogo! A palavra era: ${targetWord}`;
-                messageEl.style.color = "#f43f5e";
-                endGame();
-            }
-        }
-
-        function endGame() {
-            gameOver = true;
-            restartBtn.style.display = "block";
-        }
-
-        keys.forEach(key => {
-            key.addEventListener("click", () => {
-                handleKeyPress(key.getAttribute("data-key"));
-            });
-        });
-
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") handleKeyPress("ENTER");
-            else if (e.key === "Backspace") handleKeyPress("BACK");
-            else if (e.key.length === 1 && e.key.match(/^[a-zA-ZçÇ]$/)) {
-                handleKeyPress(e.key.toUpperCase());
-            }
-        });
-
-        initGame();
-    </script>
+    </main>
 </body>
 </html>
-
